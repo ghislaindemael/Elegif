@@ -55,13 +55,13 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
         text_x = round(((width - longest_line_width) // 2) * 0.75)
 
         # Add text to the PIL image
-        for j in range(i + 1):
+        for j in range(len(lines_array)):
             line = lines_array[j]
 
-            if j <= i:
+            if j < i:
                 # Skip fading effect for lines already written
                 draw.text((text_x, text_y + font_size * j), line, font=font, fill=txt_color)
-            elif animation == "fade_in":
+            elif j == i and animation == "fade_in":
                 # Calculate the difference between the background color and desired text color
                 color_diff = tuple(txt_color[c] - bg_color[c] for c in range(3))
 
@@ -70,12 +70,10 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
                     fade_progress = k / fade_frame_count
                     current_color = tuple(int(bg_color[c] + fade_progress * color_diff[c]) for c in range(3))
                     draw.text((text_x, text_y + font_size * j), line, font=font, fill=current_color)
-                    frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-                    video_writer.write(frame)  # Write the frame to the video file
-            else:
-                draw.text((text_x, text_y + font_size * j), line, font=font, fill=txt_color)
-                frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-                video_writer.write(frame)  # Write the frame to the video file
+
+            # Convert the PIL image to OpenCV format
+            frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+            video_writer.write(frame)  # Write the frame to the video file
 
     # Release the video writer
     video_writer.release()
@@ -88,7 +86,7 @@ text_list = [
     "This is the third line of text.",
     "\n- R.D -"
 ]
-duration_per_line = 3  # in seconds
+duration_per_line = 5  # in seconds
 background_color = "#FEFEFE"  # Light Grey
 text_color = "#454545"  # Dark Grey
 colors = [background_color, text_color]
