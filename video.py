@@ -21,7 +21,6 @@ def hex_to_rgb(hex_color):
 
 
 def create_text_animation(lines_array, line_duration, color_array, font_file, output_dir, animation):
-
     # Define video properties
     width, height = 1080, 1920
     fps = 30
@@ -40,10 +39,11 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
     longest_line = max(lines_array, key=len)
 
     # Fade parameters
-    fade_frame_count = int(fps * line_duration) // 2
+    frame_duration = int(fps * line_duration)
+    fade_frame_count = int(frame_duration / 2)
 
-    # Iterate over time intervals
-    for i in range(len(lines_array)):
+    # Iterate over lines
+    for i, line in enumerate(lines_array):
         # Create a blank image with the specified background color
         image = Image.new("RGB", (width, height), bg_color)
         draw = ImageDraw.Draw(image)
@@ -53,26 +53,32 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
         longest_line_width, _ = draw.textsize(longest_line, font=font)
         text_x = round(((width - longest_line_width) // 2) * 0.75)
 
-        # Add text to the PIL image
-        for j in range(len(lines_array)):
-            line = lines_array[j]
+        # Rewrite the previous lines without fade effect
+        for j in range(i):
+            prev_line = lines_array[j]
+            draw.text((text_x, text_y + font_size * j), prev_line, font=font, fill=txt_color)
 
-            if j <= i:
-                # Calculate the difference between the background color and desired text color
-                color_diff = tuple(txt_color[c] - bg_color[c] for c in range(3))
+        # Add text to the PIL image with fade-in effect for the current line only
+        if animation == "fade_in":
+            # Calculate the difference between the background color and desired text color
+            color_diff = tuple(txt_color[c] - bg_color[c] for c in range(3))
 
-                # Calculate the text color for each frame based on the animation type
-                for k in range(fade_frame_count):
-                    fade_progress = k / fade_frame_count
-                    current_color = tuple(int(bg_color[c] + fade_progress * color_diff[c]) for c in range(3))
-                    draw.text((text_x, text_y + font_size * j), line, font=font, fill=current_color)
-                    frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-                    video_writer.write(frame)  # Write the frame to the video file
-
-            else:
-                draw.text((text_x, text_y + font_size * j), line, font=font, fill=txt_color)
+            # Calculate the text color for each frame
+            for k in range(fade_frame_count):
+                fade_progress = k / fade_frame_count
+                current_color = tuple(int(bg_color[c] + fade_progress * color_diff[c]) for c in range(3))
+                draw.text((text_x, text_y + font_size * i), line, font=font, fill=current_color)
                 frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-                video_writer.write(frame)  # Write the frame to the video file
+                video_writer.write(frame)
+            # Write the frame without fade effect for the remaining duration
+            for _ in range(frame_duration - fade_frame_count):
+                video_writer.write(frame)
+        else:
+            draw.text((text_x, text_y + font_size * i), line, font=font, fill=txt_color)
+            frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+            # Write the frame for the entire line duration
+            for _ in range(frame_duration):
+                video_writer.write(frame)
 
     # Release the video writer
     video_writer.release()
