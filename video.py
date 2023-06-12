@@ -40,8 +40,7 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
     longest_line = max(lines_array, key=len)
 
     # Fade parameters
-    frame_duration = int(fps * line_duration)
-    fade_frame_count = int(frame_duration / 2)
+    fade_frame_count = int(fps * line_duration) // 2
 
     # Iterate over time intervals
     for i in range(len(lines_array)):
@@ -58,10 +57,7 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
         for j in range(len(lines_array)):
             line = lines_array[j]
 
-            if j < i:
-                # Skip fading effect for lines already written
-                draw.text((text_x, text_y + font_size * j), line, font=font, fill=txt_color)
-            elif j == i and animation == "fade_in":
+            if j <= i:
                 # Calculate the difference between the background color and desired text color
                 color_diff = tuple(txt_color[c] - bg_color[c] for c in range(3))
 
@@ -70,10 +66,13 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
                     fade_progress = k / fade_frame_count
                     current_color = tuple(int(bg_color[c] + fade_progress * color_diff[c]) for c in range(3))
                     draw.text((text_x, text_y + font_size * j), line, font=font, fill=current_color)
+                    frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+                    video_writer.write(frame)  # Write the frame to the video file
 
-            # Convert the PIL image to OpenCV format
-            frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-            video_writer.write(frame)  # Write the frame to the video file
+            else:
+                draw.text((text_x, text_y + font_size * j), line, font=font, fill=txt_color)
+                frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+                video_writer.write(frame)  # Write the frame to the video file
 
     # Release the video writer
     video_writer.release()
