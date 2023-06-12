@@ -34,7 +34,7 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
     txt_color = hex_to_rgb(color_array[1])
 
     # Text parameters
-    font_size = 55
+    font_size = 50
     font = ImageFont.truetype(font_file, font_size)
     longest_line = max(lines_array, key=len)
 
@@ -86,12 +86,12 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
 
 # Example usage
 text_list = [
-    "This is the first line of text.",
-    "This is the second line of text.",
-    "This is the third line of text.",
+    "È un miracolo !",
+    "Ca fonctionne, enfin presque.",
+    "Même si c'est 10x plus long qu'avec PPT.",
     "\n- R.D -"
 ]
-duration_per_line = 5  # in seconds
+duration_per_line = 3.5  # in seconds
 background_color = "#FEFEFE"  # Light Grey
 text_color = "#454545"  # Dark Grey
 colors = [background_color, text_color]
