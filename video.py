@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -19,10 +21,16 @@ def hex_to_rgb(hex_color):
     return r, g, b
 
 
-def create_text_animation(lines_array, line_duration, color_array, font_file, output_file):
+def create_text_animation(lines_array, line_duration, color_array, font_file, output_file, animation):
     # Define video properties
     width, height = 1080, 1920
     fps = 24
+
+    # Get the number of files in the resultats directory
+    file_count = len([name for name in os.listdir(output_dir) if os.path.isfile(os.path.join(output_dir, name))])
+
+    # Generate the output file name with the incremented count
+    output_file = os.path.join(output_dir, f"test{file_count + 1}.mp4")
 
     # Create a VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -41,6 +49,10 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
     # Find the longest line in the text list
     longest_line = max(lines_array, key=len)
 
+    # Calculate the fade duration based on the line duration
+    fade_duration = int(frame_duration / 2) if animation == "fade_in" else 0
+    fade_frames = int(fps * fade_duration)
+
     # Iterate over time intervals
     for i in range(len(lines_array)):
         # Create a blank image with the specified background color
@@ -56,7 +68,17 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
         # Add text to the PIL image
         for j in range(i + 1):
             line = lines_array[j]
-            draw.text((text_x, text_y + font_size * j), line, font=font, fill=text_color)
+
+            # Calculate the text opacity based on the animation type
+            if animation == "fade in":
+                fade_frame_count = min(fade_frames, frame_duration)
+                fade_alpha = int((j + 1) * 255 / (i + 1))  # Calculate the alpha value based on line index
+                for k in range(fade_frame_count):
+                    alpha = int(fade_alpha * (k + 1) / fade_frame_count)  # Adjust alpha gradually over fade frames
+                    text_color_with_alpha = text_color + (alpha,)
+                    draw.text((text_x, text_y + font_size * j), line, font=font, fill=text_color_with_alpha)
+            else:
+                draw.text((text_x, text_y + font_size * j), line, font=font, fill=text_color)
 
         # Convert the PIL image to OpenCV format
         frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
@@ -81,6 +103,8 @@ background_color = "#FEFEFE"  # Light Grey
 text_color = "#454545"  # Dark Grey
 colors = [background_color, text_color]
 font_file = "fonts/ggsans-med.ttf"  # Path to your custom font file
-output_file = "resultats/text_animation.mp4"
+output_dir = "resultats"
+output_file = "text_animation.mp4"
+animation = "fade_in"
 
-create_text_animation(text_list, duration_per_line, colors, font_file, output_file)
+create_text_animation(text_list, duration_per_line, colors, font_file, output_file, animation)
