@@ -19,7 +19,7 @@ def hex_to_rgb(hex_color):
     return r, g, b
 
 
-def create_text_animation(text_list, duration_per_line, background_color, font_file, output_file):
+def create_text_animation(lines_array, line_duration, color_array, font_file, output_file):
     # Define video properties
     width, height = 1080, 1920
     fps = 24
@@ -28,37 +28,35 @@ def create_text_animation(text_list, duration_per_line, background_color, font_f
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     video_writer = cv2.VideoWriter(output_file, fourcc, fps, (width, height))
 
-    # Define font properties
-    font_face = cv2.FONT_HERSHEY_SIMPLEX | cv2.FONT_ITALIC
-    font_size = 48
-    font_thickness = 2
+    # Color parameters
+    background_color = hex_to_rgb(color_array[0])
+    text_color = hex_to_rgb(color_array[1])
 
-    # Convert background color from hexadecimal to RGB
-    background_color = hex_to_rgb(background_color)
-
-    # Load custom font
+    # Font parameters
+    font_size = 55
     font = ImageFont.truetype(font_file, font_size)
 
-    frame_duration = int(fps * duration_per_line)
+    frame_duration = int(fps * line_duration)
+
+    # Find the longest line in the text list
+    longest_line = max(lines_array, key=len)
 
     # Iterate over time intervals
-    for i in range(len(text_list)):
+    for i in range(len(lines_array)):
         # Create a blank image with the specified background color
         image = Image.new("RGB", (width, height), background_color)
         draw = ImageDraw.Draw(image)
 
-        # Iterate over lines up to current time
+        # Calculate the position to align the lines left and center the lines horizontally
+        text_y = (height - font_size * len(lines_array)) // 2
+        longest_line_width, _ = draw.textsize(longest_line, font=font)
+        text_x = round(
+            ((width - longest_line_width) // 2) * 0.75)  # Set x-coordinate to center align based on the longest line
+
+        # Add text to the PIL image
         for j in range(i + 1):
-            line = text_list[j]
-
-            # Calculate the position to display the text
-            text_size = draw.textsize(line, font=font)
-
-            text_x = (width - text_size[0]) // 2
-            text_y = (height - text_size[1] * len(text_list)) // 2 + text_size[1] * j
-
-            # Add text to the PIL image
-            draw.text((text_x, text_y), line, font=font, fill=(255, 0, 255))
+            line = lines_array[j]
+            draw.text((text_x, text_y + font_size * j), line, font=font, fill=text_color)
 
         # Convert the PIL image to OpenCV format
         frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
@@ -75,11 +73,14 @@ def create_text_animation(text_list, duration_per_line, background_color, font_f
 text_list = [
     "This is the first line of text.",
     "This is the second line of text.",
-    "This is the third line of text."
+    "This is the third line of text.",
+    "\n- R.D - "
 ]
-duration_per_line = 2  # in seconds
-background_color = "#FEFEFE"  # Grey background color in hexadecimal format
+duration_per_line = 3  # in seconds
+background_color = "#FEFEFE"  # Light Grey
+text_color = "#454545"  # Dark Grey
+colors = [background_color, text_color]
 font_file = "fonts/ggsans-med.ttf"  # Path to your custom font file
-output_file = "text_animation.mp4"
+output_file = "resultats/text_animation.mp4"
 
-create_text_animation(text_list, duration_per_line, background_color, font_file, output_file)
+create_text_animation(text_list, duration_per_line, colors, font_file, output_file)
