@@ -28,7 +28,7 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
 
     # Text parameters
     font_size = 50
-    font = ImageFont.truetype(font_file, font_size)
+    font = ImageFont.truetype("fonts/" + font_file, font_size)
     longest_line = max(lines_array, key=len)
 
     # Fade parameters
@@ -59,10 +59,10 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
         # Adds a language flag if set
         if flag_image:
             # Resize flag image to desired dimensions
-            flag_image_resized = flag_image.resize((75, 75))
+            flag_image_resized = flag_image.resize((100, 100))
 
             # Calculate flag position
-            flag_position = (width - (2 * flag_image_resized.width), text_y - flag_image_resized.height)
+            flag_position = (width - (round(1.5 * flag_image_resized.width)), text_y - flag_image_resized.height)
 
             # Adjust flag position if it would clip out of frame
             if flag_position[1] < 0:
@@ -100,19 +100,3 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
 
     # Release the video writer
     video_writer.release()
-
-
-# Example usage
-text_list = ["Coucou :)", "Encore.", "Eh oui.", "C'est toujours moi.", "\nSignature."]
-
-duration_per_line = 3.5  # in seconds
-background_color = "#FEFEFE"  # Light Grey
-text_color = "#454545"  # Dark Grey
-colors = [background_color, text_color]
-font_file = "fonts/ggsans-med.ttf"  # Path to your custom font file
-output_dir = "resultats"
-animation = "fade_in"
-language = "fr"  # Language code for the desired flag
-name = ""  # Name for the output file (optional)
-
-create_text_animation(text_list, duration_per_line, colors, font_file, output_dir, animation, language, name)
