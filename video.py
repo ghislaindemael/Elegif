@@ -41,7 +41,7 @@ def generate_video(poem, video_params, anim_params, color_params, text_params, f
         flag = flag.resize((flag_params[1], flag_params[2]))
         flag = np.array(flag)[:, :, [2, 1, 0, 3]]  # Swap R and B channels
         flag = Image.fromarray(flag, "RGBA")
-        flag_position = (width - (round(1.5 * flag.width)), text_y - round(1.5 * flag.height))
+        flag_position = (width - (round(1.5 * flag.width)), text_y - round(1.1 * flag.height))
         if flag_position[1] < 0:
             flag_position = (width - flag.width, text_y)
 
@@ -62,7 +62,7 @@ def generate_video(poem, video_params, anim_params, color_params, text_params, f
             prev_line = poem[j]
             draw.text((text_x, text_y + line_height * j), prev_line, font=font, fill=txt_color)
 
-        # Add text to the PIL image with fade-in effect for the current line only
+        # Add text to the PIL image with fade-in effect
         if animation == "fade_in":
             # Calculate the difference between the background color and desired text color
             color_diff = tuple(txt_color[c] - bg_color[c] for c in range(3))
@@ -80,7 +80,6 @@ def generate_video(poem, video_params, anim_params, color_params, text_params, f
         else:
             draw.text((text_x, text_y + line_height * i), line, font=font, fill=txt_color)
             frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-            # Add the frame for the entire line duration
             for _ in range(line_frames):
                 frames.append(frame)
 

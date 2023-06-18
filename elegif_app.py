@@ -22,9 +22,9 @@ anim_type, anim_dur = "fade_in", 2
 # Colors
 background_color, text_color = "#FEFEFE", "#454545"
 # Text properties
-font, text_size, intra_line_height = "ggsans-med.ttf", 50, 0.2
+font, text_size, intra_line_height = "ggsans-med.ttf", 50, 0.25
 # Flag properties
-lang, flag_width, flag_height = "fr", 100, 100
+lang, flag_width, flag_height = "fr", 125, 125
 # Music properties
 music_file, volume = "music.mp3", 10
 
