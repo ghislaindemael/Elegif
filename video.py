@@ -11,12 +11,13 @@ def hex_to_rgb(hex_color):
     return tuple(int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
 
 
-def create_text_animation(video_properties, lines_array, line_duration, color_array, font_file, output_file, animated, language=None,
-                          name=None):
-    # Define video properties
+def generate_video(video_properties, lines_array, line_duration, color_array, font_file, animated, language=None):
+    # Extract video properties
     width, height, fps = video_properties[0], video_properties[1], video_properties[2]
 
-    # Color parameters
+    # Extract text properties
+
+    # Extract color properties
     bg_color = hex_to_rgb(color_array[0])
     txt_color = hex_to_rgb(color_array[1])
 

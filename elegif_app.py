@@ -1,6 +1,6 @@
 import os
 
-from video import create_text_animation
+from video import generate_video
 from music import add_music
 
 # Define the parameters
@@ -28,16 +28,16 @@ music_file = "music.mp3"  # Path to the music file
 file_name = ""
 file_count = len([name for name in os.listdir(output_dir) if os.path.isfile(os.path.join(output_dir, name))])
 if name != "":
-    output_file = os.path.join(output_dir, f"{name}.mp4")
+    output = os.path.join(output_dir, f"{name}.mp4")
 else:
-    output_file = os.path.join(output_dir, f"test{file_count + 1}.mp4")
+    output = os.path.join(output_dir, f"test{file_count + 1}.mp4")
 
 # Create the video
-video = create_text_animation(video_properties, text_list, duration_per_line, colors, font_file, output_file, animation, language)
+video = generate_video(video_properties, text_list, duration_per_line, colors, font_file, animation, language)
 
 # Add music to the video
 video_with_music = video
 #video_with_music = add_music(video, music_file)
 
-# Save the video with music to the output directory
-video_with_music.write_videofile(output_file, fps=fps, codec="libx264", audio_codec="aac")
+# Save the video
+video_with_music.write_videofile(output, fps=fps, codec="libx264", audio_codec="aac")
