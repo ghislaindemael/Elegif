@@ -2,30 +2,23 @@ import os
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+from flag_helper import get_flag_path
 
 
 def hex_to_rgb(hex_color):
-    # Remove '#' from the beginning of the hexadecimal color string
     hex_color = hex_color.lstrip('#')
-
-    # Split the hexadecimal color string into RGB components
-    r, g, b = hex_color[:2], hex_color[2:4], hex_color[4:]
-
-    # Convert each component from hexadecimal to decimal
-    r = int(r, 16)
-    g = int(g, 16)
-    b = int(b, 16)
-
-    # Return the RGB values as a tuple
-    return r, g, b
+    return tuple(int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
 
 
-def create_text_animation(lines_array, line_duration, color_array, font_file, output_dir, animation):
+def create_text_animation(lines_array, line_duration, color_array, font_file, output_dir, isAnimated, language=None,
+                          name=None):
     # Define video properties
-    width, height = 1080, 1920
-    fps = 30
+    width, height, fps = 1080, 1920, 24
     file_count = len([name for name in os.listdir(output_dir) if os.path.isfile(os.path.join(output_dir, name))])
-    output_file = os.path.join(output_dir, f"test{file_count + 1}.mp4")
+    if name and name != "":
+        output_file = os.path.join(output_dir, f"{name}.mp4")
+    else:
+        output_file = os.path.join(output_dir, f"test{file_count + 1}.mp4")
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     video_writer = cv2.VideoWriter(output_file, fourcc, fps, (width, height))
 
@@ -42,6 +35,16 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
     frame_duration = int(fps * line_duration)
     fade_frame_count = int(frame_duration / 2)
 
+    # Build flag image file path if language is provided
+    flag_image_file = None
+    if language and language != "":
+        flag_image_file = get_flag_path(language)
+
+    # Load flag image if image file path is provided
+    flag_image = None
+    if flag_image_file:
+        flag_image = Image.open(flag_image_file).convert("RGBA")
+
     # Iterate over lines
     for i, line in enumerate(lines_array):
         # Create a blank image with the specified background color
@@ -53,13 +56,28 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
         longest_line_width, _ = draw.textsize(longest_line, font=font)
         text_x = round(((width - longest_line_width) // 2) * 0.75)
 
+        # Adds a language flag if set
+        if flag_image:
+            # Resize flag image to desired dimensions
+            flag_image_resized = flag_image.resize((75, 75))
+
+            # Calculate flag position
+            flag_position = (width - (2 * flag_image_resized.width), text_y - flag_image_resized.height)
+
+            # Adjust flag position if it would clip out of frame
+            if flag_position[1] < 0:
+                flag_position = (width - flag_image_resized.width, text_y)
+
+            # Paste flag image onto the main image
+            image.paste(flag_image_resized, flag_position, mask=flag_image_resized)
+
         # Rewrite the previous lines without fade effect
         for j in range(i):
             prev_line = lines_array[j]
             draw.text((text_x, text_y + font_size * j), prev_line, font=font, fill=txt_color)
 
         # Add text to the PIL image with fade-in effect for the current line only
-        if animation == "fade_in":
+        if isAnimated == "fade_in":
             # Calculate the difference between the background color and desired text color
             color_diff = tuple(txt_color[c] - bg_color[c] for c in range(3))
 
@@ -85,12 +103,8 @@ def create_text_animation(lines_array, line_duration, color_array, font_file, ou
 
 
 # Example usage
-text_list = [
-    "È un miracolo !",
-    "Ca fonctionne, enfin presque.",
-    "Même si c'est 10x plus long qu'avec PPT.",
-    "\n- R.D -"
-]
+text_list = ["Coucou :)", "Encore.", "Eh oui.", "C'est toujours moi.", "\nSignature."]
+
 duration_per_line = 3.5  # in seconds
 background_color = "#FEFEFE"  # Light Grey
 text_color = "#454545"  # Dark Grey
@@ -98,5 +112,7 @@ colors = [background_color, text_color]
 font_file = "fonts/ggsans-med.ttf"  # Path to your custom font file
 output_dir = "resultats"
 animation = "fade_in"
+language = "fr"  # Language code for the desired flag
+name = ""  # Name for the output file (optional)
 
-create_text_animation(text_list, duration_per_line, colors, font_file, output_dir, animation)
+create_text_animation(text_list, duration_per_line, colors, font_file, output_dir, animation, language, name)
