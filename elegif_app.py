@@ -7,11 +7,12 @@ from music import add_music
 # Set all the parameters
 
 # The poem
-name = "Rayon_A"
+name = "Nitescence"
 poem = [
-    "La beauté, c’est véritablement ton rayon.",
-    "À tel point que le soleil",
-    "C’est toi qui lui fait de l’ombre.",
+    "Tous mes malheurs s'envolent",
+    "Quand tu rentres dans la danse",
+    "Car ton rire est chaleur",
+    "Ton sourire, nitescence.",
     "\n- R.D -"
 ]
 
@@ -22,7 +23,7 @@ anim_type, anim_dur = "fade_in", 2
 # Colors
 background_color, text_color = "#FEFEFE", "#454545"
 # Text properties
-font, text_size, intra_line_height = "ggsans-med.ttf", 50, 0.25
+font, text_size, intra_line_height = "ggsans-med.ttf", 50, 0.12
 # Flag properties
 lang, flag_width, flag_height = "fr", 125, 125
 # Music properties
@@ -39,6 +40,10 @@ music_params = [music_file, 10]
 # Manage file name
 file_count = len(glob.glob("output/*.mp4"))
 output_name = name if name != "" else f"test{file_count + 1}"
+if anim_type != "":
+    output_name += "_A"
+if lang != "":
+    output_name += f"_{lang.upper()}"
 output = os.path.join("output", f"{output_name}.mp4")
 
 # Generate the video
