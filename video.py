@@ -62,25 +62,26 @@ def generate_video(poem, video_params, anim_params, color_params, text_params, f
             prev_line = poem[j]
             draw.text((text_x, text_y + line_height * j), prev_line, font=font, fill=txt_color)
 
-        # Add text to the PIL image with fade-in effect
-        if animation == "fade_in":
-            # Calculate the difference between the background color and desired text color
-            color_diff = tuple(txt_color[c] - bg_color[c] for c in range(3))
+        if line != "\n":
+            # Add text to the PIL image with fade-in effect
+            if animation == "fade_in":
+                # Calculate the difference between the background color and desired text color
+                color_diff = tuple(txt_color[c] - bg_color[c] for c in range(3))
 
-            # Calculate the text color for each frame
-            for k in range(fade_frames):
-                fade_progress = k / fade_frames
-                current_color = tuple(int(bg_color[c] + fade_progress * color_diff[c]) for c in range(3))
-                draw.text((text_x, text_y + line_height * i), line, font=font, fill=current_color)
+                # Calculate the text color for each frame
+                for k in range(fade_frames):
+                    fade_progress = k / fade_frames
+                    current_color = tuple(int(bg_color[c] + fade_progress * color_diff[c]) for c in range(3))
+                    draw.text((text_x, text_y + line_height * i), line, font=font, fill=current_color)
+                    frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+                    frames.append(frame)
+                # Add the frame without fade effect for the remaining duration
+                for _ in range(line_frames - fade_frames):
+                    frames.append(frame)
+            else:
+                draw.text((text_x, text_y + line_height * i), line, font=font, fill=txt_color)
                 frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-                frames.append(frame)
-            # Add the frame without fade effect for the remaining duration
-            for _ in range(line_frames - fade_frames):
-                frames.append(frame)
-        else:
-            draw.text((text_x, text_y + line_height * i), line, font=font, fill=txt_color)
-            frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-            for _ in range(line_frames):
-                frames.append(frame)
+                for _ in range(line_frames):
+                    frames.append(frame)
 
     return ImageSequenceClip(frames, fps=fps)

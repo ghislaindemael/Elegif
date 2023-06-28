@@ -7,13 +7,19 @@ from music import add_music
 # Set all the parameters
 
 # The poem
-name = "Nitescence"
+name = "Pléiade"
 poem = [
-    "Tous mes malheurs s'envolent",
-    "Quand tu rentres dans la danse",
-    "Car ton rire est chaleur",
-    "Ton sourire, nitescence.",
-    "\n- R.D -"
+    "Je ne comprends pas les gens. Ni ceux qui s’entassent",
+    "Pour de la bière tiède dans un bar sombre, mal ventilé,",
+    "Ni ceux qui payent un rein pour un siège en terrasse,",
+    "Un café soluble accompagné d’un croissant surgelé.",
+    "\n",
+    "Ce qui confère davantage de satisfaction",
+    "C’est un verre de Chartreuse et son parfum enivrant,",
+    "Dans la main une des Pléiades, de la Collection",
+    "Allongé sur un transat sous leur amas scintillant.",
+    "\n",
+    "- R.D -"
 ]
 
 # Video properties
@@ -23,7 +29,7 @@ anim_type, anim_dur = "fade_in", 2
 # Colors
 background_color, text_color = "#FEFEFE", "#454545"
 # Text properties
-font, text_size, intra_line_height = "ggsans-med.ttf", 50, 0.12
+font, text_size, intra_line_height = "ggsans-med.ttf", 42, 0.2
 # Flag properties
 lang, flag_width, flag_height = "fr", 125, 125
 # Music properties
