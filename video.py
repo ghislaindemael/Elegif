@@ -21,7 +21,7 @@ def generate_video(poem, video_params, anim_params, color_params, text_params, f
     fade_frames = int(fps * anim_dur)
 
     # Extract  & calc colors
-    bg_color, txt_color = hex_to_rgb(color_params[0]), hex_to_rgb(color_params[1])
+    bg_color, txt_color = hex_to_rgb(color_params[0]), hex_to_rgb(color_params[2])
 
     # Extract & calculate text properties
     font_file, font_size, intra_height = text_params[0], text_params[1], text_params[2] + 1

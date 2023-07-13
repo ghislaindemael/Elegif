@@ -29,7 +29,7 @@ width, height, fps, dur_per_line = 1080, 1920, 24, 2.5
 # Animation properties
 anim_type, anim_dur = "fade_in", 1.5
 # Colors
-background_color, text_color = "#FEFEFE", "#454545"
+video_bg_color, image_bg_color, text_color = "#FEFEFE", "#FAFAFA", "#454545"
 # Text properties
 font, text_size, intra_line_height = "ggsans-med.ttf", 52, 0.25
 # Flag properties
@@ -41,7 +41,7 @@ music_file, volume = "music.mp3", 10
 image_params = [i_width, i_height]
 video_params = [width, height, fps, dur_per_line]
 anim_params = [anim_type, anim_dur]
-color_params = [background_color, text_color]
+color_params = [video_bg_color, image_bg_color, text_color]
 text_params = [font, text_size, intra_line_height]
 flag_params = [lang, flag_width, flag_height]
 music_params = [music_file, 10]

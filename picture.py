@@ -14,7 +14,7 @@ def generate_pic(poem, img_params, color_params, text_params, flag_params):
     width, height = img_params[0], img_params[1]
 
     # Extract  & calc colors
-    bg_color, txt_color = hex_to_rgb(color_params[0]), hex_to_rgb(color_params[1])
+    bg_color, txt_color = hex_to_rgb(color_params[1]), hex_to_rgb(color_params[2])
 
     # Extract & calculate text properties
     font_file, font_size, intra_height = text_params[0], text_params[1], text_params[2] + 1
