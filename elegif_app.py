@@ -11,23 +11,23 @@ gen_pic = True
 gen_vid = True
 
 # The poem
-name = "Aquarelle"
+name = "Test"
 poem = [
-    "Di un rarissimo carteggio",
-    "Tra curve et linee",
-    "Il tuo corpo è uno degradato",
-    "Di tutte le sfumature",
-    "Cosa possiamo trovare",
-    "In una scatola di acquerelli.",
+    "Test",
+    "Test",
+    "Test",
+    "Test",
+    "Test",
+    "Test",
     "\n- R.D -"
 ]
 
 # Image properties
 i_width, i_height = 1080, 1080
 # Video properties
-width, height, fps, dur_per_line = 1080, 1920, 24, 2.5
+width, height, fps, dur_per_line = 1080, 1920, 24, 2
 # Animation properties
-anim_type, anim_dur = "fade_in", 1.5
+anim_type, anim_dur = "fade_in", 1
 # Colors
 video_bg_color, image_bg_color, text_color = "#FEFEFE", "#FAFAFA", "#454545"
 # Text properties
