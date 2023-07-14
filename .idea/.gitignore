@@ -1,9 +1,9 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-/credentials.txt
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+credentials.txt
