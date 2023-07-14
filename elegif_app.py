@@ -1,5 +1,6 @@
 import os
 import sys
+import instabot
 
 from helper import *
 from picture import generate_pic
@@ -8,9 +9,14 @@ from video import generate_video
 # Set all the parameters
 gen_pic = True
 gen_vid = True
+share_pic_insta = False
+share_vid_insta = False
+share_vid_tiktok = False
 
 # The poem
+lang = ""
 name = "Test"
+
 poem = read_poem_file()
 poem.append("\n- R.D -")
 
@@ -25,7 +31,7 @@ video_bg_color, image_bg_color, text_color = "#FEFEFE", "#FAFAFA", "#454545"
 # Text properties
 font, text_size, intra_line_height = "ggsans-med.ttf", 52, 0.25
 # Flag properties
-lang, flag_width, flag_height = "", 125, 125
+flag_width, flag_height = 125, 125
 # Music properties
 music_file, volume = "music.mp3", 10
 
