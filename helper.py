@@ -19,3 +19,11 @@ def read_poem_file():
         for line in file:
             poem_lines.append(line.strip())
     return poem_lines
+
+def load_credentials(platform):
+    with open("credentials.txt", "r") as file:
+        for line in file:
+            if line.startswith(platform):
+                _, username, password = line.strip().split(":")
+                return username, password
+    return None, None
