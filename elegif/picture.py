@@ -1,7 +1,5 @@
-import cv2
-import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-from helper import get_flag_path
+from elegif.helper import get_flag_path
 
 
 def hex_to_rgb(hex_color):
@@ -18,7 +16,7 @@ def generate_pic(poem, img_params, color_params, text_params, flag_params):
 
     # Extract & calculate text properties
     font_file, font_size, intra_height = text_params[0], text_params[1], text_params[2] + 1
-    font = ImageFont.truetype("fonts/" + font_file, font_size)
+    font = ImageFont.truetype("elegif/fonts/" + font_file, font_size)
     line_height = int(font_size * intra_height)
     total_line_height = len(poem) * line_height
     longest_line = max(poem, key=len)

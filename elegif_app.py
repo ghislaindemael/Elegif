@@ -2,20 +2,25 @@ import os
 import sys
 import instabot
 
-from helper import *
-from picture import generate_pic
-from video import generate_video
 
-# Set all the parameters
+from PIL import Image
+from elegif.helper import *
+from elegif.picture import generate_pic
+from elegif.video import generate_video
+
+# Set the actions
 gen_pic = True
-gen_vid = True
-share_pic_insta = False
+share_pic_insta = True
+
+gen_vid = False
 share_vid_insta = False
 share_vid_tiktok = False
 
 # The poem
-lang = ""
-name = "Test"
+lang = "##"
+name = "TestPubliInstagram"
+description = "Test de publication sur Instagram via élégif"
+inspiration = "Adopte un zombie, Magoyong"
 
 poem = read_poem_file()
 poem.append("\n- R.D -")
@@ -29,7 +34,7 @@ anim_type, anim_dur = "fade_in", 1
 # Colors
 video_bg_color, image_bg_color, text_color = "#FEFEFE", "#FAFAFA", "#454545"
 # Text properties
-font, text_size, intra_line_height = "ggsans-med.ttf", 52, 0.25
+font, text_size, intra_line_height = "ggsans-med.ttf", 50, 0.25
 # Flag properties
 flag_width, flag_height = 125, 125
 # Music properties
@@ -65,6 +70,23 @@ if gen_pic:
     picture = generate_pic(poem, image_params, color_params, text_params, flag_params)
     picture.save(pic_output)
 
+    temp_insta_image = Image.open(pic_output)
+    temp_insta_image.save("temp_insta.jpg", "JPEG")
+
+    caption = description + "\n\n"
+    caption += get_inspiration_translation(lang) + inspiration + "\n\n"
+    caption += get_hashtags()
+
+    if share_pic_insta:
+
+        bot = instabot.Bot()
+        username, password = load_credentials("instagram")
+        bot.login(username=username, password=password)
+
+        bot.upload_photo("temp_insta.jpg", caption=caption)
+
+    os.remove("temp_insta.jpg")
+
 if gen_vid:
     # Generate the video
     video = generate_video(poem, video_params, anim_params, color_params, text_params, flag_params)
@@ -75,3 +97,4 @@ if gen_vid:
 
     # Save the video
     video_with_music.write_videofile(vid_output, fps=fps, codec="libx264", audio_codec="aac")
+

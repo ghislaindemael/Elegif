@@ -1,5 +1,7 @@
 def get_flag_path(language):
-    dir_prefix = "images/flags/"
+    dir_prefix = "elegif/images/flags/"
+    if language == "##":
+        return dir_prefix + "pirate-waving.png"
     if language == "fr":
         return dir_prefix + "fr-waving.png"
     elif language == "de":
@@ -13,6 +15,16 @@ def get_flag_path(language):
         return None
 
 
+def get_inspiration_translation(language):
+    if language == "fr" or language == "en" or language == "de":
+        return "Inspiration : "
+    elif language == "it":
+        return "Ispirazione : "
+    # Add more language codes and corresponding translation paths as needed
+    else:
+        return "Inspiration : "
+
+
 def read_poem_file():
     poem_lines = []
     with open("poem", "r", encoding="utf-8") as file:
@@ -20,8 +32,15 @@ def read_poem_file():
             poem_lines.append(line.strip())
     return poem_lines
 
+
+def get_hashtags():
+    with open("hashtags", "r", encoding="utf-8") as file:
+        hashtags = "".join("#" + line.strip() + " " for line in file.readlines())
+    return hashtags
+
+
 def load_credentials(platform):
-    with open("credentials.txt", "r") as file:
+    with open("elegif/credentials.txt", "r") as file:
         for line in file:
             if line.startswith(platform):
                 _, username, password = line.strip().split(":")

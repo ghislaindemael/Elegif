@@ -4,3 +4,6 @@ text_list = [
     "Même si c'est 10x plus long qu'avec PPT.",
     "\n- R.D -"
 ]
+
+credentials
+network:username:password
