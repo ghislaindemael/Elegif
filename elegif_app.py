@@ -1,10 +1,9 @@
-import glob
 import os
 import sys
 
+from helper import *
 from picture import generate_pic
 from video import generate_video
-from music import add_music
 
 # Set all the parameters
 gen_pic = True
@@ -12,15 +11,8 @@ gen_vid = True
 
 # The poem
 name = "Test"
-poem = [
-    "Test",
-    "Test",
-    "Test",
-    "Test",
-    "Test",
-    "Test",
-    "\n- R.D -"
-]
+poem = read_poem_file()
+poem.append("\n- R.D -")
 
 # Image properties
 i_width, i_height = 1080, 1080
@@ -33,7 +25,7 @@ video_bg_color, image_bg_color, text_color = "#FEFEFE", "#FAFAFA", "#454545"
 # Text properties
 font, text_size, intra_line_height = "ggsans-med.ttf", 52, 0.25
 # Flag properties
-lang, flag_width, flag_height = "it", 125, 125
+lang, flag_width, flag_height = "", 125, 125
 # Music properties
 music_file, volume = "music.mp3", 10
 
@@ -68,7 +60,6 @@ if gen_pic:
     picture.save(pic_output)
 
 if gen_vid:
-
     # Generate the video
     video = generate_video(poem, video_params, anim_params, color_params, text_params, flag_params)
 

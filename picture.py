@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-from flag_helper import get_flag_path
+from helper import get_flag_path
 
 
 def hex_to_rgb(hex_color):
