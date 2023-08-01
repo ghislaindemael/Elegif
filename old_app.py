@@ -5,7 +5,7 @@ import instabot
 from PIL import Image
 from elegif.helper import *
 from elegif.picture import gen_pic
-from elegif.video import generate_video
+from elegif.video import gen_vid
 
 # Set the actions
 gen_pic = True
@@ -87,7 +87,7 @@ if gen_pic:
 
 if gen_vid:
     # Generate the video
-    video = generate_video(poem, video_params, anim_params, color_params, text_params, flag_params)
+    video = gen_vid(poem, video_params, anim_params, color_params, text_params, flag_params)
 
     # Add music to the video
     video_with_music = video

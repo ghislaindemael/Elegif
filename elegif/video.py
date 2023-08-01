@@ -10,7 +10,7 @@ def hex_to_rgb(hex_color):
     return tuple(int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
 
 
-def generate_video(poem, video_params, anim_params, color_params, text_params, flag_params):
+def gen_vid(poem, video_params, anim_params, color_params, text_params, flag_params):
 
     # Extract & calculate video properties
     width, height, fps, line_dur = video_params[0], video_params[1], video_params[2], video_params[3]

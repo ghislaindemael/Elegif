@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 from tkinter import ttk
 from elegif.picture import gen_pic
+from elegif.video import gen_vid
 
 
 def create_generator_tab(tab):
@@ -170,7 +171,10 @@ def create_generator_tab(tab):
             picture.save(prop[0][3])
 
     def generate_vid():
-        properties = extract_properties()
+        prop = extract_properties()
+        if prop[0][1] != "":
+            video = gen_vid(prop[0][2], prop[2], prop[3], prop[4], prop[5], prop[6])
+            video.write_videofile(prop[0][4], fps=prop[2][2], codec="libx264", audio_codec="aac")
 
     # Generate Picture and Generate Video buttons
     generate_buttons_frame = ttk.Frame(tab)
@@ -183,9 +187,6 @@ def create_generator_tab(tab):
     generate_video_button.pack(side=tk.LEFT, padx=5)
 
     update_window_size()
-
-
-
 
 
 def create_publisher_tab(tab):
@@ -213,9 +214,6 @@ def create_window():
     create_publisher_tab(publisher_tab)
 
     root.mainloop()
-
-
-
 
 
 if __name__ == "__main__":
