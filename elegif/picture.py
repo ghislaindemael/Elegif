@@ -7,7 +7,7 @@ def hex_to_rgb(hex_color):
     return tuple(int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
 
 
-def generate_pic(poem, img_params, color_params, text_params, flag_params):
+def gen_pic(poem, img_params, color_params, text_params, flag_params):
     # Extract & calculate video properties
     width, height = img_params[0], img_params[1]
 
@@ -43,7 +43,5 @@ def generate_pic(poem, img_params, color_params, text_params, flag_params):
     for i, line in enumerate(poem):
         if line != "\n":
             draw.text((text_x, text_y + line_height * i), line, font=font, fill=txt_color)
-
-
 
     return image

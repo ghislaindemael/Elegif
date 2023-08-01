@@ -4,7 +4,7 @@ import instabot
 
 from PIL import Image
 from elegif.helper import *
-from elegif.picture import generate_pic
+from elegif.picture import gen_pic
 from elegif.video import generate_video
 
 # Set the actions
@@ -64,7 +64,7 @@ vid_output = os.path.join("output", f"{vid_name}.mp4")
 
 if gen_pic:
     # Generate the picture
-    picture = generate_pic(poem, image_params, color_params, text_params, flag_params)
+    picture = gen_pic(poem, image_params, color_params, text_params, flag_params)
     picture.save(pic_output)
 
     temp_insta_image = Image.open(pic_output)

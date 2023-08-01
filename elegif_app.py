@@ -1,5 +1,7 @@
+import os
 import tkinter as tk
 from tkinter import ttk
+from elegif.picture import gen_pic
 
 
 def create_generator_tab(tab):
@@ -79,7 +81,7 @@ def create_generator_tab(tab):
     # Flag Size
     flag_size_label = ttk.Label(extra_properties_frame, text="Flag Size:")
     flag_size_label.grid(row=0, column=0, padx=5)
-    flag_size_var = tk.DoubleVar()
+    flag_size_var = tk.IntVar()
     flag_size_var.set(111)
     flag_size_entry = ttk.Entry(extra_properties_frame, textvariable=flag_size_var, width=6)
     flag_size_entry.grid(row=0, column=1, padx=5)
@@ -111,7 +113,7 @@ def create_generator_tab(tab):
     # Text Size
     text_size_label = ttk.Label(extra_properties_frame, text="Text Size:")
     text_size_label.grid(row=1, column=0, padx=5)
-    text_size_var = tk.DoubleVar()
+    text_size_var = tk.IntVar()
     text_size_var.set(50)
     text_size_entry = ttk.Entry(extra_properties_frame, textvariable=text_size_var, width=6)
     text_size_entry.grid(row=1, column=1, padx=5)
@@ -141,18 +143,31 @@ def create_generator_tab(tab):
         # Colors
         video_bg_color, image_bg_color, text_color = "#FEFEFE", "#FAFAFA", "#454545"
         # Text properties
-        font, text_size, intra_line_height = "ggsans-med.ttf",text_size_var.get(), intra_line_var.get()
+        font, text_size, intra_line_height = "ggsans-med.ttf", text_size_var.get(), intra_line_var.get()
         # Flag properties
         flag_width, flag_height = flag_size_var.get(), flag_size_var.get()
 
-        return [[i_width, i_height], [width, height, fps, dur_per_line], [anim_type, anim_dur],
-                [video_bg_color, image_bg_color, text_color], [font, text_size, intra_line_height],
-                [lang, flag_width, flag_height]
-                ]
+        pic_name = "Poème" + name
+        if lang != "":
+            pic_name += f"_{lang.upper()}"
+        pic_output = os.path.join("output", f"{pic_name}.png")
+
+        vid_name = name
+        if anim_type != "":
+            vid_name += "_A"
+        if lang != "":
+            vid_name += f"_{lang.upper()}"
+        vid_output = os.path.join("output", f"{vid_name}.mp4")
+
+        return [[lang, name, poem, pic_output, vid_output], [i_width, i_height], [width, height, fps, dur_per_line],
+                [anim_type, anim_dur], [video_bg_color, image_bg_color, text_color],
+                [font, text_size, intra_line_height], [lang, flag_width, flag_height]]
 
     def generate_pic():
-        properties = extract_properties()
-
+        prop = extract_properties()
+        if prop[0][1] != "":
+            picture = gen_pic(prop[0][2], prop[1], prop[4], prop[5], prop[6])
+            picture.save(prop[0][3])
 
     def generate_vid():
         properties = extract_properties()

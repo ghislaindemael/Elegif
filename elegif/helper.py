@@ -5,15 +5,15 @@ import tempfile
 
 def get_flag_path(language):
     dir_prefix = "elegif/images/flags/"
-    if language == "##":
+    if language == "###":
         return dir_prefix + "pirate-waving.png"
-    if language == "fr":
+    if language == "French":
         return dir_prefix + "fr-waving.png"
-    elif language == "de":
+    elif language == "German":
         return dir_prefix + "de-waving.png"
-    elif language == "en":
+    elif language == "English":
         return dir_prefix + "gb-waving.png"
-    elif language == "it":
+    elif language == "Italian":
         return dir_prefix + "it-waving.png"
     # Add more language codes and corresponding flag image paths as needed
     else:
