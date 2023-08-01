@@ -2,7 +2,6 @@ import os
 import sys
 import instabot
 
-
 from PIL import Image
 from elegif.helper import *
 from elegif.picture import generate_pic
@@ -10,10 +9,10 @@ from elegif.video import generate_video
 
 # Set the actions
 gen_pic = True
-share_pic_insta = True
+share_pic_insta = False
 
-gen_vid = False
-share_vid_insta = False
+gen_vid = True
+share_vid_insta = True
 share_vid_tiktok = False
 
 # The poem
@@ -72,6 +71,7 @@ if gen_pic:
 
     temp_insta_image = Image.open(pic_output)
     temp_insta_image.save("temp_insta.jpg", "JPEG")
+    temp_insta_image.close()
 
     caption = description + "\n\n"
     caption += get_inspiration_translation(lang) + inspiration + "\n\n"
@@ -98,3 +98,22 @@ if gen_vid:
     # Save the video
     video_with_music.write_videofile(vid_output, fps=fps, codec="libx264", audio_codec="aac")
 
+    caption = description + "\n\n"
+    caption += get_inspiration_translation(lang) + inspiration + "\n\n"
+    caption += get_hashtags()
+
+    if share_vid_insta:
+
+        print('publish to insta')
+        bot = instabot.Bot()
+        username, password = load_credentials("instagram")
+        bot.login(username=username, password=password)
+
+        temp_vid = create_copy(vid_output)
+
+        bot.upload_video(temp_vid, caption=caption)
+
+        os.remove('config')
+
+    if share_vid_tiktok:
+        print('publish to tt')

@@ -1,3 +1,8 @@
+import os
+import shutil
+import tempfile
+
+
 def get_flag_path(language):
     dir_prefix = "elegif/images/flags/"
     if language == "##":
@@ -46,3 +51,12 @@ def load_credentials(platform):
                 _, username, password = line.strip().split(":")
                 return username, password
     return None, None
+
+
+def create_copy(og_file_path):
+    file_name, file_extension = os.path.splitext(og_file_path)
+    new_path = file_name + "_tc" + file_extension
+    shutil.copy(og_file_path, new_path)
+
+    return new_path
+
