@@ -62,7 +62,7 @@ def gen_vid(poem, video_params, anim_params, color_params, text_params, flag_par
             prev_line = poem[j]
             draw.text((text_x, text_y + line_height * j), prev_line, font=font, fill=txt_color)
 
-        if line != "\n":
+        if line != "":
             # Add text to the PIL image with fade-in effect
             if animation == "fade_in":
                 # Calculate the difference between the background color and desired text color

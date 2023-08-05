@@ -83,7 +83,7 @@ def create_generator_tab(tab):
     flag_size_label = ttk.Label(extra_properties_frame, text="Flag Size:")
     flag_size_label.grid(row=0, column=0, padx=5)
     flag_size_var = tk.IntVar()
-    flag_size_var.set(111)
+    flag_size_var.set(120)
     flag_size_entry = ttk.Entry(extra_properties_frame, textvariable=flag_size_var, width=6)
     flag_size_entry.grid(row=0, column=1, padx=5)
 
@@ -91,7 +91,7 @@ def create_generator_tab(tab):
     duration_label = ttk.Label(extra_properties_frame, text="Duration per Line:")
     duration_label.grid(row=0, column=2, padx=5)
     duration_var = tk.DoubleVar()
-    duration_var.set(2)
+    duration_var.set(3)
     duration_entry = ttk.Entry(extra_properties_frame, textvariable=duration_var, width=6)
     duration_entry.grid(row=0, column=3, padx=5)
 
@@ -107,7 +107,7 @@ def create_generator_tab(tab):
     anim_duration_label = ttk.Label(extra_properties_frame, text="Anim Dur:")
     anim_duration_label.grid(row=1, column=4, padx=5)
     anim_duration_var = tk.DoubleVar()
-    anim_duration_var.set(1)
+    anim_duration_var.set(2)
     anim_duration_entry = ttk.Entry(extra_properties_frame, textvariable=anim_duration_var, width=6)
     anim_duration_entry.grid(row=1, column=5, padx=5)
 
@@ -150,14 +150,14 @@ def create_generator_tab(tab):
 
         pic_name = "Poème" + name
         if lang != "":
-            pic_name += f"_{lang.upper()}"
+            pic_name += f"_{lang[0:2].upper()}"
         pic_output = os.path.join("output", f"{pic_name}.png")
 
         vid_name = name
         if anim_type != "":
             vid_name += "_A"
         if lang != "":
-            vid_name += f"_{lang.upper()}"
+            vid_name += f"_{lang[0:2].upper()}"
         vid_output = os.path.join("output", f"{vid_name}.mp4")
 
         return [[lang, name, poem, pic_output, vid_output], [i_width, i_height], [width, height, fps, dur_per_line],
@@ -189,13 +189,13 @@ def create_generator_tab(tab):
     update_window_size()
 
 
-def create_publisher_tab(tab):
+def create_publisher_tab():
     # Add widgets for poem publishing
     pass
 
 
 def create_window():
-    global root  # Make root a global variable so it can be accessed from other functions
+    global root
     root = tk.Tk()
     root.title("Poem Editor")
     root.geometry("400x350")
@@ -211,7 +211,7 @@ def create_window():
     notebook.add(publisher_tab, text="Publisher")
 
     create_generator_tab(generator_tab)
-    create_publisher_tab(publisher_tab)
+    create_publisher_tab()
 
     root.mainloop()
 
