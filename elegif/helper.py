@@ -15,6 +15,9 @@ def get_flag_path(language):
         return dir_prefix + "gb-waving.png"
     elif language == "Italian":
         return dir_prefix + "it-waving.png"
+    elif language == "Switzerland":
+        return dir_prefix + "ch-waving.png"
+
     # Add more language codes and corresponding flag image paths as needed
     else:
         return None

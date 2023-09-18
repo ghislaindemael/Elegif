@@ -1,4 +1,6 @@
 import os
+import platform
+import subprocess
 import tkinter as tk
 from tkinter import ttk
 from elegif.picture import gen_pic
@@ -24,12 +26,12 @@ def create_generator_tab(tab):
     language_frame = ttk.Frame(tab)
     language_frame.pack(pady=5, padx=50)
 
-    language_label = ttk.Label(language_frame, text="Language :")
+    language_label = ttk.Label(language_frame, text="Flag :")
     language_label.grid(row=0, column=0, padx=10)
 
-    languages = ["French", "English", "German", "Italian", "###"]  # Languages to choose from
+    languages = ["French", "English", "German", "Italian", "Switzerland", "##"]  # Languages to choose from
     language_var = tk.StringVar()
-    language_var.set("###")  # Default value is "###"
+    language_var.set("##")  # Default value is "##"
 
     language_dropdown = ttk.Combobox(language_frame, textvariable=language_var, values=languages, state="readonly")
     language_dropdown.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
@@ -91,7 +93,7 @@ def create_generator_tab(tab):
     duration_label = ttk.Label(extra_properties_frame, text="Duration per Line:")
     duration_label.grid(row=0, column=2, padx=5)
     duration_var = tk.DoubleVar()
-    duration_var.set(3)
+    duration_var.set(2)
     duration_entry = ttk.Entry(extra_properties_frame, textvariable=duration_var, width=6)
     duration_entry.grid(row=0, column=3, padx=5)
 
@@ -107,7 +109,7 @@ def create_generator_tab(tab):
     anim_duration_label = ttk.Label(extra_properties_frame, text="Anim Dur:")
     anim_duration_label.grid(row=1, column=4, padx=5)
     anim_duration_var = tk.DoubleVar()
-    anim_duration_var.set(2)
+    anim_duration_var.set(1.5)
     anim_duration_entry = ttk.Entry(extra_properties_frame, textvariable=anim_duration_var, width=6)
     anim_duration_entry.grid(row=1, column=5, padx=5)
 
@@ -127,13 +129,31 @@ def create_generator_tab(tab):
     intra_line_entry = ttk.Entry(extra_properties_frame, textvariable=intra_line_var, width=6)
     intra_line_entry.grid(row=1, column=3, padx=5)
 
+    # Signature field
+    signature_label = ttk.Label(extra_properties_frame, text="Signature:")
+    signature_label.grid(row=2, column=0, padx=5)
+    signature_var = tk.StringVar(value="R.D")
+    signature_var = ttk.Entry(extra_properties_frame, textvariable=signature_var, width=6)
+    signature_var.insert(0, "- R.D -")
+    signature_var.grid(row=2, column=1, padx=5)
+
+    # Preview checkbox
+    preview_label = ttk.Label(extra_properties_frame, text="Pic preview:")
+    preview_label.grid(row=2, column=2, padx=5)
+    preview_var = tk.BooleanVar()
+    preview_var.set(True)  # Default value is True
+    preview_checkbox = ttk.Checkbutton(extra_properties_frame, variable=preview_var)
+    preview_checkbox.grid(row=2, column=3, padx=5)
+
     def extract_properties():
         # The poem
         lang = language_var.get()
         name = title_entry.get()
 
         poem = [entry.get() for entry in poem_entries]
-        poem.append("\n- R.D -")
+        signature = signature_var.get()
+        if signature != "":
+            poem.append("\n" + signature)
 
         # Image properties
         i_width, i_height = 1080, 1080
@@ -142,11 +162,13 @@ def create_generator_tab(tab):
         # Animation properties
         anim_type, anim_dur = "fade_in" if animated_var.get() else "", anim_duration_var.get()
         # Colors
-        video_bg_color, image_bg_color, text_color = "#FEFEFE", "#FAFAFA", "#454545"
+        video_bg_color, image_bg_color, text_color = "#FAFAFA", "#FAFAFA", "#454545"
         # Text properties
         font, text_size, intra_line_height = "ggsans-med.ttf", text_size_var.get(), intra_line_var.get()
         # Flag properties
         flag_width, flag_height = flag_size_var.get(), flag_size_var.get()
+        # Extra properties
+        preview = preview_var.get()
 
         pic_name = "Poème" + name
         if lang != "":
@@ -162,7 +184,7 @@ def create_generator_tab(tab):
 
         return [[lang, name, poem, pic_output, vid_output], [i_width, i_height], [width, height, fps, dur_per_line],
                 [anim_type, anim_dur], [video_bg_color, image_bg_color, text_color],
-                [font, text_size, intra_line_height], [lang, flag_width, flag_height]]
+                [font, text_size, intra_line_height], [lang, flag_width, flag_height], [preview]]
 
     def generate_pic():
         prop = extract_properties()
@@ -170,11 +192,29 @@ def create_generator_tab(tab):
             picture = gen_pic(prop[0][2], prop[1], prop[4], prop[5], prop[6])
             picture.save(prop[0][3])
 
+            if prop[7][0]:
+                print("Opening picture file")
+                if platform.system() == "Windows":
+                    subprocess.Popen(["start", prop[0][3]], shell=True)
+                elif platform.system() == "macOs":
+                    subprocess.Popen(["open", prop[0][3]])
+                elif platform.system() == "Linux":
+                    subprocess.Popen(["xdg-open", prop[0][3]])
+
     def generate_vid():
         prop = extract_properties()
         if prop[0][1] != "":
             video = gen_vid(prop[0][2], prop[2], prop[3], prop[4], prop[5], prop[6])
             video.write_videofile(prop[0][4], fps=prop[2][2], codec="libx264", audio_codec="aac")
+
+            if prop[7][0]:
+                print("Opening video file")
+                if platform.system() == "Windows":
+                    subprocess.Popen(["start", "", prop[0][4]], shell=True)
+                elif platform.system() == "macOs":
+                    subprocess.Popen(["open", prop[0][4]])
+                elif platform.system() == "Linux":
+                    subprocess.Popen(["xdg-open", prop[0][4]])
 
     # Generate Picture and Generate Video buttons
     generate_buttons_frame = ttk.Frame(tab)
@@ -197,7 +237,7 @@ def create_publisher_tab():
 def create_window():
     global root
     root = tk.Tk()
-    root.title("Poem Editor")
+    root.title("Elegif")
     root.geometry("400x350")
     root.resizable(False, False)
 
